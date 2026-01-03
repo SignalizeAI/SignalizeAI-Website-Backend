@@ -1,0 +1,37 @@
+{
+  "name": "signalize-backend",
+  "version": "1.0.0",
+  "description": "SignalizeAI Backend API",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^1.5.0",
+    "@prisma/adapter-pg": "^7.0.1",
+    "@prisma/client": "^7.0.1",
+    "axios": "^1.6.2",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^17.2.3",
+    "next": "16.0.10",
+    "next-auth": "^4.24.13",
+    "nodemailer": "^7.0.11",
+    "stripe": "^14.7.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20.11.27",
+    "@types/nodemailer": "^6.4.14",
+    "prisma": "^7.0.1",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
