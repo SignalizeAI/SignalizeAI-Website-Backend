@@ -5,6 +5,7 @@ import { sendEmail } from "../../../utils/email";
 
 const MAX_NAME_LENGTH = 200;
 const MAX_EMAIL_LENGTH = 320;
+const MAX_TOPIC_LENGTH = 120;
 const MAX_PHONE_LENGTH = 60;
 const MAX_MESSAGE_LENGTH = 5000;
 
@@ -64,6 +65,7 @@ export async function POST(request: Request) {
   let body: {
     fullName?: string;
     email?: string;
+    topic?: string;
     phone?: string | null;
     message?: string;
   };
@@ -79,6 +81,7 @@ export async function POST(request: Request) {
 
   const fullName = body.fullName?.trim() || "";
   const email = body.email?.trim() || "";
+  const topic = body.topic?.trim() || "";
   const phone = body.phone?.trim() || "";
   const message = body.message?.trim() || "";
 
@@ -99,6 +102,7 @@ export async function POST(request: Request) {
   if (
     fullName.length > MAX_NAME_LENGTH ||
     email.length > MAX_EMAIL_LENGTH ||
+    topic.length > MAX_TOPIC_LENGTH ||
     phone.length > MAX_PHONE_LENGTH ||
     message.length > MAX_MESSAGE_LENGTH
   ) {
@@ -109,18 +113,21 @@ export async function POST(request: Request) {
   }
 
   try {
+    const storedMessage = topic ? `[Topic] ${topic}\n\n${message}` : message;
+
     await prisma.contactMessage.create({
       data: {
         fullName,
         email,
         phone: phone.length ? phone : null,
-        message,
+        message: storedMessage,
       },
     });
 
     const targetEmail = process.env.CONTACT_TO || "support@signalizeai.org";
     const safeName = escapeHtml(fullName);
     const safeEmail = escapeHtml(email);
+    const safeTopic = escapeHtml(topic || "General");
     const safePhone = escapeHtml(phone || "Not provided");
     const safeMessage = escapeHtml(message).replace(/\n/g, "<br />");
 
@@ -130,6 +137,7 @@ export async function POST(request: Request) {
       html: `
         <p><strong>Name:</strong> ${safeName}</p>
         <p><strong>Email:</strong> ${safeEmail}</p>
+        <p><strong>Topic:</strong> ${safeTopic}</p>
         <p><strong>Phone:</strong> ${safePhone}</p>
         <p><strong>Message:</strong></p>
         <p>${safeMessage}</p>
