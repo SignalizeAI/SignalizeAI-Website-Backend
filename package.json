@@ -1,6 +1,6 @@
 {
   "name": "signalize-backend",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "SignalizeAI Backend API",
   "private": true,
   "scripts": {
