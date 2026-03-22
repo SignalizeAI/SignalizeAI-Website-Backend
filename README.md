@@ -1,78 +1,90 @@
 # SignalizeAI Website Backend
 
-Next.js backend service for the SignalizeAI website.
+Small Next.js backend service for the SignalizeAI website contact flow.
 
-It currently provides:
-- Contact form API handling
-- Origin validation and CORS handling for contact submissions
-- Contact message persistence via Prisma/PostgreSQL
-- Contact email forwarding via SMTP
+It currently handles:
 
-## Setup
+- `POST /api/contact`
+- contact form validation
+- allowed-origin checks
+- Prisma persistence
+- email forwarding through SMTP
 
-1. Copy environment template:
-   ```bash
-   cp .env.example .env.local
-   ```
+## Project Scope
 
-2. Update `.env.local` values:
-   - `DATABASE_URL`
-   - OAuth/NextAuth secrets (if auth routes are enabled)
-   - SMTP credentials (`EMAIL_SERVER_*`, `EMAIL_FROM`)
-   - Contact settings (`CONTACT_TO`, `CONTACT_ALLOWED_ORIGINS`)
-   - Stripe keys (if payment routes are added/used)
+This project is intentionally narrow. It is not the AI backend and it is not the main website app.
 
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
+Use:
 
-4. Generate Prisma client:
-   ```bash
-   npm run prisma:generate
-   ```
+- `../SignalizeAI-Backend` for AI, quota, outreach, follow-ups, and billing webhooks
+- `../SignalizeAI-Website` for the public website and prospect pages
 
-5. Run dev server:
-   ```bash
-   npm run dev
-   ```
+## Tech Stack
+
+- Next.js
+- Prisma
+- PostgreSQL
+- Nodemailer
+
+## Local Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create `.env.local` and add the required values:
+
+```env
+DATABASE_URL=your_database_url
+EMAIL_SERVER_HOST=your_smtp_host
+EMAIL_SERVER_PORT=your_smtp_port
+EMAIL_SERVER_USER=your_smtp_user
+EMAIL_SERVER_PASSWORD=your_smtp_password
+EMAIL_FROM=noreply@signalizeai.org
+CONTACT_TO=support@signalizeai.org
+CONTACT_ALLOWED_ORIGINS=http://localhost:3000,https://signalizeai.org,https://www.signalizeai.org
+```
+
+3. Generate Prisma client:
+
+```bash
+npm run prisma:generate
+```
+
+4. Start the app:
+
+```bash
+npm run dev
+```
 
 ## Scripts
 
-- `npm run dev` - start local development server
-- `npm run build` - generate Prisma client and build Next.js app
-- `npm run start` - run production server
-- `npm run lint` - run lint checks
-- `npm run prisma:generate` - generate Prisma client
-- `npm run prisma:studio` - open Prisma Studio
-
-## API Routes
-
-- `POST /api/contact` - submit contact form message
-- `OPTIONS /api/contact` - CORS preflight
-
-## Environment Variables
-
-See `.env.example` for the full list.
-
-Important contact-related variables:
-- `CONTACT_TO` (default target inbox)
-- `CONTACT_ALLOWED_ORIGINS` (comma-separated allowlist)
+- `npm run dev`
+- `npm run build`
+- `npm run start`
+- `npm run lint`
+- `npm run prisma:generate`
+- `npm run prisma:studio`
 
 ## Project Structure
 
 ```text
 src/
-├── app/
-│   └── api/
-│       └── contact/
-│           └── route.ts
+├── app/api/contact/route.ts
 └── utils/
     ├── auth.ts
     ├── email.ts
-    └── prismaDB.ts
+    ├── prismaDB.ts
+    └── validateEmail.ts
 
 prisma/
 └── schema.prisma
 ```
 
+## Notes
+
+- The contact route uses origin allowlisting
+- Messages are persisted before / during email forwarding
+- This service is separate so the website can keep contact handling isolated from the AI backend
