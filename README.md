@@ -1,40 +1,45 @@
 # SignalizeAI Website Backend
 
-Small Next.js backend service for the SignalizeAI website contact flow.
+SignalizeAI-Website-Backend is the small backend app used for website contact handling.
 
-It currently handles:
+Current version: `5.3.0`
+
+## Scope
+
+This service is intentionally narrow.
+
+It handles:
 
 - `POST /api/contact`
 - contact form validation
 - allowed-origin checks
 - Prisma persistence
-- email forwarding through SMTP
+- SMTP email forwarding
 
-## Project Scope
+It does not handle:
 
-This project is intentionally narrow. It is not the AI backend and it is not the main website app.
+- AI prospecting
+- outreach generation
+- follow-up generation
+- pricing logic
+- website prospect pages
 
-Use:
-
-- `../SignalizeAI-Backend` for AI, quota, outreach, follow-ups, and billing webhooks
-- `../SignalizeAI-Website` for the public website and prospect pages
-
-## Tech Stack
+## Tech stack
 
 - Next.js
 - Prisma
 - PostgreSQL
 - Nodemailer
 
-## Local Setup
+## Local setup
 
-1. Install dependencies:
+1. Install dependencies
 
 ```bash
 npm install
 ```
 
-2. Create `.env.local` and add the required values:
+2. Create `.env.local`
 
 ```env
 DATABASE_URL=your_database_url
@@ -47,13 +52,13 @@ CONTACT_TO=support@signalizeai.org
 CONTACT_ALLOWED_ORIGINS=http://localhost:3000,https://signalizeai.org,https://www.signalizeai.org
 ```
 
-3. Generate Prisma client:
+3. Generate Prisma client
 
 ```bash
 npm run prisma:generate
 ```
 
-4. Start the app:
+4. Start the app
 
 ```bash
 npm run dev
@@ -68,7 +73,7 @@ npm run dev
 - `npm run prisma:generate`
 - `npm run prisma:studio`
 
-## Project Structure
+## Source layout
 
 ```text
 src/
@@ -78,13 +83,10 @@ src/
     ├── email.ts
     ├── prismaDB.ts
     └── validateEmail.ts
-
-prisma/
-└── schema.prisma
 ```
 
 ## Notes
 
-- The contact route uses origin allowlisting
-- Messages are persisted before / during email forwarding
-- This service is separate so the website can keep contact handling isolated from the AI backend
+- contact requests are origin-checked
+- messages are persisted before / during forwarding
+- this repo stays separate so website contact handling remains isolated
