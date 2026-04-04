@@ -2,7 +2,7 @@
 
 SignalizeAI-Website-Backend is the small backend app used for website contact handling.
 
-Current version: `5.4.0`
+Current version: `5.4.1`
 
 ## Scope
 
